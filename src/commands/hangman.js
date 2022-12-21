@@ -1,52 +1,51 @@
 const fs = require("fs");
 const hangmanWords = fs.readFileSync("./src/data/hangmanWords.txt").toString().split("\n");
 module.exports = {
-  name: "hangman",
-  description: "",
-  guildOnly: true,
-  cooldown: 3,
-  async execute(message, args) {
-    console.log(hangmanWords)
-      const word = hangmanWords[(Math.random() * hangmanWords.length) >> 1].toLowerCase();
-    console.log(`Word: ${word}`);
-      const hangmanStatus = "- ".repeat(word.length).split(" ").slice(0, word.length);
-      hangmanStatus.pop();
-      hangmanStatus.push("-");
-      console.log(`Status: ${hangmanStatus}`);
-      const statusMessage = await message.channel.send(hangmanStatus.join(" "));
-      const listener = message.client.on("messageCreate", (guess) => {
-          if (guess.author.id != message.author.id) return;
-          guess.delete();
-          guess = guess.content.trim().toLowerCase();
-        if (guess.startsWith(message.client.prefix)) {
-            listener.destroy();
-            message.channel.send("Game ended. You used a command.")
-            return;
+    name: "hangman",
+    description: "",
+    guildOnly: true,
+    cooldown: 3,
+    async execute(message, args) {
+        const word = hangmanWords[(Math.random() * hangmanWords.length) >> 1].toLowerCase();
+        const hangmanStatus = "- ".repeat(word.length).split(" ").slice(0, word.length);
+        for (let i = 0; i < word.length; i++) {
+            if (word[i] == " ") hangmanStatus[i] = " ";
         }
-        if (guess.length == 1 && word.includes(guess)) {
-            for (let i = 0; i < word.length; i++) {
-                if (word[i] == guess) {
-                    hangmanStatus[i] = guess;
-                }
-            }
-            //message.channel.send("You guessed correctly");
-            if (!hangmanStatus.includes("-")) {
-                message.channel.send("You won!");
-                listener.destroy();
+        hangmanStatus.pop();
+        hangmanStatus.push("-");
+        console.log(word);
+        const statusMessage = await message.channel.send(hangmanStatus.join(" "));
+        message.client.hangman.set(message.author.id, async (guess) => {
+            if (guess.startsWith(message.client.prefix)) {
+                message.channel.send("Game ended. You used a command.");
+                message.client.hangman.delete(message.author.id);
                 return;
             }
-            statusMessage.edit(hangmanStatus.join(" "));
-        } else if (guess.length == word.length && guess == word) {
-            message.channel.send("You won!");
-            listener.destroy();
-            return;
-        } else {
-            statusMessage.edit("Invalid Guess");
-            setTimeout(() => {
+            if (guess.length == 1 && word.includes(guess)) {
+                for (let i = 0; i < word.length; i++) {
+                    if (word[i] == guess) {
+                        hangmanStatus[i] = guess;
+                    }
+                }
+                console.log(hangmanStatus.join(" "));
+                if (!hangmanStatus.includes("-")) {
+                    await message.channel.send("You won!");
+                    statusMessage.edit(hangmanStatus.join(" ")).catch();
+                    message.client.hangman.delete(message.author.id);
+                    return;
+                }
                 statusMessage.edit(hangmanStatus.join(" "));
-            }, 1000);
-           // message.channel.send(hangmanStatus.join(" "));
-        }
-      })
-  }
+            } else if (guess.length == word.length && guess == word) {
+                await message.channel.send("You won!");
+                await statusMessage.edit(word.split("").join(" ")).catch();
+                message.client.hangman.delete(message.author.id);
+                return;
+            } else {
+                statusMessage.edit("Invalid Guess");
+                setTimeout(() => {
+                    statusMessage.edit(hangmanStatus.join(" ")).catch();
+                }, 1000);
+            }
+        })
+    }
 };

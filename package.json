@@ -1,0 +1,30 @@
+{
+  "name": "discord-snowman",
+  "version": "0.1.0",
+  "description": "Snowman bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JairusSW/snowman-bot.git"
+  },
+  "keywords": [
+    "discord",
+    "bot",
+    "snowman",
+    "utility",
+    "multipurpose"
+  ],
+  "author": "Jairus Tanaka and Silas Schiax",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/JairusSW/snowman-bot/issues"
+  },
+  "homepage": "https://github.com/JairusSW/snowman-bot#readme",
+  "dependencies": {
+    "discord.js": "^14.7.1",
+    "dotenv": "^16.0.3"
+  }
+}

@@ -4,7 +4,8 @@
   "description": "Snowman bot",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "run": "node .",
+    "prettier": "prettier . -w"
   },
   "repository": {
     "type": "git",
@@ -17,13 +18,15 @@
     "utility",
     "multipurpose"
   ],
-  "author": "Jairus Tanaka and Silas Schiax",
+  "author": "Jairus Tanaka and Silas Schlax",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/JairusSW/snowman-bot/issues"
   },
   "homepage": "https://github.com/JairusSW/snowman-bot#readme",
   "dependencies": {
+    "cleverbot-free": "^1.1.12",
+    "discord-chatbot": "^2.1.0",
     "discord.js": "^14.7.1",
     "dotenv": "^16.0.3",
     "rezidb": "^3.0.0"

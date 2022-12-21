@@ -25,6 +25,7 @@
   "homepage": "https://github.com/JairusSW/snowman-bot#readme",
   "dependencies": {
     "discord.js": "^14.7.1",
-    "dotenv": "^16.0.3"
+    "dotenv": "^16.0.3",
+    "rezidb": "^3.0.0"
   }
 }

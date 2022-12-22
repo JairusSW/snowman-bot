@@ -128,8 +128,10 @@ let lastMessage = 0;
 
 client.on("messageCreate", message => {
     if (message.author.bot) return;
-    if (!message.content.startsWith(`<@${client.id}>`)) return;
+    console.log(message.content)
+    if (message.content.trimStart().startsWith(client.prefix)) return;
     if (client.hangman.has(message.author.id)) return;
+    if (!message.content.trimStart().startsWith(`<@${client.user.id}>`)) return;
     if (((Date.now() - lastMessage) < 5000) && lastMessage !== 0) {
         lastMessage = Date.now();
         message.channel.send(`<@${message.author.id}>, Slow down!`);
@@ -147,5 +149,4 @@ client.on("messageCreate", message => {
     }).catch(err => {
         console.log(`The AI could not compute`);
     });
-    //}
 })

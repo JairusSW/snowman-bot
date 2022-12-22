@@ -35,6 +35,8 @@ const client = new Client({
 
 client.prefix = process.env.prefix;
 
+client.conversation = [];
+
 client.db = {
     statsGlobal: new ReziDB({
         name: "statsGlobal",
@@ -43,6 +45,8 @@ client.db = {
         cache: false,
     }),
 };
+
+client.hangman = new Map();
 
 client.commands = new Collection();
 const commands = fs
@@ -71,7 +75,7 @@ for (const ev of events) {
         });
     }
 }
-if (!client.hangman) client.hangman = new Map();
+
 client.on("messageCreate", async (message) => {
     if (message.author.bot) return;
     // Inject code into messageCreate for hangman utility. Maybe make a wrapper for this later?
@@ -83,6 +87,7 @@ client.on("messageCreate", async (message) => {
             }
         }
     }
+
     const globalStats = client.db.statsGlobal;
 
     const userStats = (await globalStats.get(message.author.id)) || {
@@ -120,27 +125,27 @@ client.on("messageCreate", async (message) => {
 client.login(process.env.token);
 
 let lastMessage = 0;
-//let conversation = [];
-/*
+
 client.on("messageCreate", message => {
     if (message.author.bot) return;
-    if (((Date.now() - lastMessage) < 3000) && lastMessage !== 0) {
-      lastMessage = Date.now();
-      message.channel.send("Slow down!")
-      return;
+    if (!message.content.startsWith(`<@${client.id}>`)) return;
+    if (client.hangman.has(message.author.id)) return;
+    if (((Date.now() - lastMessage) < 5000) && lastMessage !== 0) {
+        lastMessage = Date.now();
+        message.channel.send(`<@${message.author.id}>, Slow down!`);
+        return;
     }
     lastMessage = Date.now();
-      
-    if (message.channel.id == 1055122091227230281) {
-      let text = message.content;
-        
-      cleverbot(text, conversation).then(res => {
-        conversation.push(text);
-        conversation.push(res);
-        message.channel.send(res);
-           
-      }).catch(err => {
+    let text = message.content.slice(message.content.indexOf(">") + 1 || 0);
+
+    cleverbot(text, client.conversations).then(res => {
+        client.conversation.push(text);
+        client.conversation.push(res);
+        client.conversation = client.conversation.slice(0, 10);
+        message.channel.send(`<@${message.author.id}>, ${res}`);
+
+    }).catch(err => {
         console.log(`The AI could not compute`);
-      });
-    }
-})*/
+    });
+    //}
+})

@@ -9,6 +9,21 @@ const adminIDs = [600700584038760448, 890576956054188083];
 
 //const chatbot = new Chatbot({ name: "Snowman", gender: "Male" });
 
+if (process.argv.includes("-w") || process.argv.includes("--watch")) {
+    process.on("exit", function () {
+        console.log("Bot crashed. Restarting...");
+        child_process.spawn(
+            process.argv.shift(),
+            process.argv,
+            {
+                cwd: process.cwd(),
+                detached: false,
+                stdio: "inherit"
+            }
+        );
+    });
+}
+
 const client = new Client({
     intents: [
         GatewayIntentBits.AutoModerationConfiguration,
@@ -95,12 +110,15 @@ client.on("messageCreate", async (message) => {
     }
 
     let guildData = await client.db.guilds.get(message.guild.id);
-    
+
     // Default props of guilds
-    if (!guildData) guildData = {
-        prefix: ".",
-        starboardChannel: "starboard"
-    };
+    if (!guildData) {
+        guildData = {
+            prefix: ".",
+            starboardChannel: "starboard"
+        };
+        await client.db.guilds.get(message.guild.id);
+    }
 
     const userData = await client.db.users.get(message.author.id);
 

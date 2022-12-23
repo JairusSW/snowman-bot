@@ -7,15 +7,23 @@ module.exports = {
   async execute(message, args) {
     switch (args[0]) {
       case "users": {
-        message.channel.send("```\n" + JSON.stringify(await message.client.db.users.toJSON(), null, 2) + "```");  
+        message.channel.send(
+          "```\n" +
+            JSON.stringify(await message.client.db.users.toJSON(), null, 2) +
+            "```"
+        );
         break;
       }
       case "guilds": {
-        message.channel.send("```\n" + JSON.stringify(await message.client.db.guilds.toJSON(), null, 2) + "```");  
+        message.channel.send(
+          "```\n" +
+            JSON.stringify(await message.client.db.guilds.toJSON(), null, 2) +
+            "```"
+        );
         break;
       }
       default: {
-        message.channel.send("Invalid DB name provided!")
+        message.channel.send("Invalid DB name provided!");
       }
     }
   },

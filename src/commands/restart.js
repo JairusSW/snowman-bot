@@ -8,7 +8,7 @@ module.exports = {
     adminOnly: true,
     async execute(message, args) {
         console.log("Restarting Bot...");
-        message.channel.send("Restarting Bot.");
+        await message.channel.send("Restarting Bot...");
         process.on("exit", function () {
             child_process.spawn(
                 process.argv.shift(),

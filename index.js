@@ -9,6 +9,7 @@ const adminIDs = [600700584038760448, 890576956054188083];
 
 //const chatbot = new Chatbot({ name: "Snowman", gender: "Male" });
 
+// If you run bot with -w or --watch it will never die and you can never stop it.
 if (process.argv.includes("-w") || process.argv.includes("--watch")) {
     process.on("exit", function () {
         console.log("Bot crashed. Restarting...");
@@ -114,10 +115,10 @@ client.on("messageCreate", async (message) => {
     // Default props of guilds
     if (!guildData) {
         guildData = {
-            prefix: ".",
+            prefix: process.env.prefix,
             starboardChannel: "starboard"
         };
-        await client.db.guilds.get(message.guild.id);
+        await client.db.guilds.set(message.guild.id, guildData);
     }
 
     const userData = await client.db.users.get(message.author.id);

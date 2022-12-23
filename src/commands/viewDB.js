@@ -5,14 +5,18 @@ module.exports = {
   cooldown: 3,
   adminOnly: true,
   async execute(message, args) {
-    console.log("See db");
-    console.log(message.client.db.users.toJSON())
-    console.log(
-      "Database: " +
-        JSON.stringify(await message.client.db.users.toJSON(), null, 2)
-    );
-    message.channel.send(
-      JSON.stringify(await message.client.db.users.toJSON(), null, 2)
-    );
+    switch (args[0]) {
+      case "users": {
+        message.channel.send("```\n" + JSON.stringify(await message.client.db.users.toJSON(), null, 2) + "```");  
+        break;
+      }
+      case "guilds": {
+        message.channel.send("```\n" + JSON.stringify(await message.client.db.guilds.toJSON(), null, 2) + "```");  
+        break;
+      }
+      default: {
+        message.channel.send("Invalid DB name provided!")
+      }
+    }
   },
 };

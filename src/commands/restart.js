@@ -15,11 +15,11 @@ module.exports = {
                 process.argv,
                 {
                     cwd: process.cwd(),
-                    detached: true,
+                    detached: false,
                     stdio: "inherit"
                 }
             );
         });
-        process.exit();
+        process.exit(1);
     },
 };

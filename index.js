@@ -94,11 +94,12 @@ client.on("messageCreate", async (message) => {
         }
     }
 
-    const guildData = await client.db.guilds.get(message.guild.id);
+    let guildData = await client.db.guilds.get(message.guild.id);
     
     // Default props of guilds
     if (!guildData) guildData = {
-        prefix: "."
+        prefix: ".",
+        starboardChannel: "starboard"
     };
 
     const userData = await client.db.users.get(message.author.id);

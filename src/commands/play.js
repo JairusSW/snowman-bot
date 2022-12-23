@@ -35,7 +35,7 @@ module.exports = {
       inputType: stream.type,
     });
     if (message.client.voicePlayer) {
-      client.voicePlayer.stop();
+      message.client.voicePlayer.stop();
     }
     message.client.voicePlayer = createAudioPlayer({
       behaviors: {

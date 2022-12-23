@@ -9,22 +9,12 @@ module.exports = {
     const region = message.guild.preferredLocale;
     const server = message.guild.name;
     const channels = message.guild.channels.cache.size;
-    const voice = message.guild.channels.cache.filter(
-      (channel) => channel.type === "GUILD_VOICE"
-    ).size;
-    const cat = message.guild.channels.cache.filter(
-      (channel) => channel.type === "GUILD_CATEGORY"
-    ).size;
+    const voice = message.guild.channels.cache.filter((channel) => channel.type === "GUILD_VOICE").size;
+    const cat = message.guild.channels.cache.filter((channel) => channel.type === "GUILD_CATEGORY").size;
     const roles = message.guild.roles.cache.size;
-    const onlinemembers = message.guild.members.cache.filter(
-      (m) => m.presence?.status === "online"
-    ).size;
-    const dndmembers = message.guild.members.cache.filter(
-      (m) => m.presence?.status === "dnd"
-    ).size;
-    const idleemembers = message.guild.members.cache.filter(
-      (m) => m.presence?.status === "idle"
-    ).size;
+    const onlinemembers = message.guild.members.cache.filter((m) => m.presence?.status === "online").size;
+        const dndmembers = message.guild.members.cache.filter((m) => m.presence?.status === "dnd").size;
+    const idleemembers = message.guild.members.cache.filter((m) => m.presence?.status === "idle").size;
     const nonoffline = onlinemembers + dndmembers + idleemembers;
     const description = message.guild.description || "No server description";
     const emoji = message.guild.emojis;

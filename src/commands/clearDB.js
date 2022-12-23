@@ -5,7 +5,7 @@ module.exports = {
   cooldown: 3,
   adminOnly: true,
   async execute(message, args) {
-    await message.client.db.statsGlobal.clear();
+    await message.client.db.users.clear();
     message.channel.send("DB Cleared!");
   },
 };

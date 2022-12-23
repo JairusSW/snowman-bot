@@ -6,6 +6,7 @@ module.exports = {
     guildOnly: true,
     cooldown: 3,
     async execute(message, args) {
+        const guildData = await message.client.db.guilds.get(message.guild.id);
         const word = hangmanWords[(Math.random() * hangmanWords.length) >> 1].toLowerCase();
         const hangmanStatus = "- ".repeat(word.length).split(" ").slice(0, word.length);
         for (let i = 0; i < word.length; i++) {
@@ -16,7 +17,7 @@ module.exports = {
         console.log(word);
         const statusMessage = await message.channel.send(hangmanStatus.join(" "));
         message.client.hangman.set(message.author.id, async (guess) => {
-            if (guess.startsWith(message.client.prefix)) {
+            if (guess.startsWith(guildData.prefix)) {
                 message.channel.send("Game ended. You used a command.");
                 message.client.hangman.delete(message.author.id);
                 return;

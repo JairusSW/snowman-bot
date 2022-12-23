@@ -38,11 +38,17 @@ client.prefix = process.env.prefix;
 client.conversation = [];
 
 client.db = {
-    statsGlobal: new ReziDB({
-        name: "statsGlobal",
+    guilds: new ReziDB({
+        name: "guilds",
         path: "./database",
         cluster: false,
-        cache: false,
+        cache: true,
+    }),
+    users: new ReziDB({
+        name: "users",
+        path: "./database",
+        cluster: false,
+        cache: true,
     }),
 };
 
@@ -88,32 +94,34 @@ client.on("messageCreate", async (message) => {
         }
     }
 
-    const globalStats = client.db.statsGlobal;
-
-    const userStats = (await globalStats.get(message.author.id)) || {
-        messagesSent: 0,
-        commandsUsed: 0,
+    const guildData = await client.db.guilds.get(message.guild.id);
+    
+    // Default props of guilds
+    if (!guildData) guildData = {
+        prefix: "."
     };
-    /*
-          {
-              messagesSent: 0,
-              commandsUsed: 0
-          }
-      */
-    if (!message.content.startsWith(process.env.prefix)) {
-        userStats.messagesSent++;
-        await globalStats.set(message.author.id, userStats);
+
+    const userData = await client.db.users.get(message.author.id);
+
+    console.log("Prefix: " + guildData.prefix)
+    if (!message.content.startsWith(guildData.prefix)) {
+        if (userData) {
+            userData.stats.messages.sent++;
+            await client.db.users.set(message.author.id, userData);
+        }
         return;
     }
     const args = message.content
-        .slice(process.env.prefix.length)
+        .slice(1)
         .trim()
         .split(/ +/g);
     const command = args.shift().toLowerCase();
     if (client.commands.has(command)) {
         const commandFunc = client.commands.get(command);
-        userStats.commandsUsed++;
-        await globalStats.set(message.author.id, userStats);
+        if (userData) {
+            userData.stats.commands.sent++;
+            await client.db.users.set(message.author.id, userData);
+        }
         if (commandFunc.isAdmin && !adminIDs.includes(message.author.id)) {
             message.channel.send("You lowly weeb. You can't do this boi. :(((((");
         } else {

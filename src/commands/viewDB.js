@@ -6,12 +6,13 @@ module.exports = {
   adminOnly: true,
   async execute(message, args) {
     console.log("See db");
+    console.log(message.client.db.users.toJSON())
     console.log(
       "Database: " +
-        JSON.stringify(message.client.db.statsGlobal.toJSON(), null, 2)
+        JSON.stringify(await message.client.db.users.toJSON(), null, 2)
     );
     message.channel.send(
-      JSON.stringify(message.client.db.statsGlobal.toJSON(), null, 2)
+      JSON.stringify(await message.client.db.users.toJSON(), null, 2)
     );
   },
 };

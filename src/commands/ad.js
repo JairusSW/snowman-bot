@@ -4,6 +4,7 @@ const { EmbedBuilder, AttachmentBuilder } = require("discord.js");
 module.exports = {
   name: "ad",
   description: "Create RIP Image",
+  usage: "[@user]",
   cooldown: 1,
   guildOnly: true,
   async execute(message, args) {

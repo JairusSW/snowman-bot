@@ -27,15 +27,20 @@
   "dependencies": {
     "@discordjs/voice": "^0.14.0",
     "cleverbot-free": "^1.1.12",
+    "convert-seconds": "^1.0.1",
     "discord-chatbot": "^2.1.0",
     "discord-image-generation": "^1.4.15",
     "discord.js": "^14.7.1",
     "dotenv": "^16.0.3",
     "ffmpeg-static": "^5.1.0",
+    "numeral": "^2.0.6",
     "play-dl": "^1.9.6",
     "rezidb": "^3.0.0",
+    "v8-compile-cache": "^2.3.0",
     "weather-js": "^2.0.0",
-    "ytdl-core-discord": "^1.3.1"
+    "ytdl-core": "^4.11.2",
+    "ytdl-core-discord": "^1.3.1",
+    "ytsr": "^3.8.0"
   },
   "devDependencies": {
     "prettier": "^2.8.1"

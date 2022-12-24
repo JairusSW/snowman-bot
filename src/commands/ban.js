@@ -1,6 +1,7 @@
 module.exports = {
   name: "ban",
-  description: "",
+  description: "Ban a user from the sever",
+  usage: "[@user]",
   execute(message, args) {
     if (message.member.permissions.has("BAN_MEMBERS")) {
       const member = message.mentions.users.first();

@@ -4,6 +4,14 @@ module.exports = {
   once: false,
   guildOnly: true,
   async execute(client, reaction, user) {
+
+    if (client.reactions.has(reaction.message.id)) {
+      const reactions = client.reactions.get(reaction.message.id);
+      if (reactions.emojis.includes(reaction.emoji.name)) {
+        reactions.execute(reaction.emoji.name);
+      }
+    }
+
     const message = reaction.message;
     if (reaction.emoji.name !== "⭐") return;
     // if (message.author.id === user.id) return;

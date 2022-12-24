@@ -3,7 +3,7 @@ const { EmbedBuilder, AttachmentBuilder } = require("discord.js");
 
 module.exports = {
   name: "bob-ross",
-  description: "Create RIP Image",
+  description: "Turn someone into a Bob Ross painting",
   cooldown: 1,
   guildOnly: true,
   async execute(message, args) {

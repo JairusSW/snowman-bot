@@ -8,6 +8,7 @@ const {
   joinVoiceChannel,
   AudioPlayerStatus
 } = require("@discordjs/voice");
+
 module.exports = {
   name: "play",
   description: "Play a song from youtube, soundcloud, or spotify",
@@ -45,7 +46,8 @@ module.exports = {
     if (!queueData) {
       queueData = {
         queue: [{
-          name: searchData.description,
+          url: searchData.url,
+          name: searchData.title,
           duration: searchData.durationInSec,
           image: searchData.thumbnails[0].url
         }],
@@ -54,7 +56,7 @@ module.exports = {
           loop: false,
           volume: 75
         },
-        queuePosition: -1,
+        queuePosition: 0,
         durationStart: Date.now(),
         controlMessage: null
       };
@@ -67,24 +69,24 @@ module.exports = {
       });
 
       message.client.voicePlayer.on(AudioPlayerStatus.Idle, async () => {
+        console.log(`Now Playing: ${queueData.queuePosition}`)
         nowPlaying = new EmbedBuilder()
-          .setTitle(searchData.description)
+          .setTitle(searchData.title)
           .setDescription(`Playing Now.
       Length: ${songLength(searchData.durationInSec)}
       Quality: 96kbps
-      Position: [${songLength((Date.now() - message.client.musicQueue.get(message.guild.id).durationStart) * 1000)}/${songLength(searchData.durationInSec)}]`)
+      Position: [${songLength((Date.now() - message.client.musicQueue.get(message.guild.id).durationStart) / 1000)}/${songLength(searchData.durationInSec)}]`)
           .setColor(0xff0000)
           .setTimestamp()
+          .setImage(queueData.queue[queueData.queuePosition].image)
           .setFooter({ text: message.author.username })
-        if (queueData.queue[queueData.queuePosition]) {
+        /*if (queueData.queuePosition > 0) {
           queueData.queuePosition++;
-          console.log(queueData)
-          nowPlaying.setImage(queueData.queue[queueData.queuePosition].image)
-          message.channel.send({ embeds: [nowPlaying] });
           message.client.musicQueue.set(message.guild.id, queueData);
-        }
+        }*/
+        message.channel.send({ embeds: [nowPlaying] });
 
-        const stream = await play.stream(searchData.url);
+        const stream = await play.stream(queueData.queue[queueData.queuePosition].url);
 
         const resource = createAudioResource(stream.stream, {
           inputType: stream.type,
@@ -97,7 +99,7 @@ module.exports = {
         message.client.voicePlayer.play(resource);
         // message.client.voiceConnection.unsubscribe();
         message.client.voiceConnection.subscribe(message.client.voicePlayer);
-        
+
         if (!queueData.controlMessage) {
           const control = await message.author.send({ embeds: [nowPlaying] });
 
@@ -147,13 +149,26 @@ module.exports = {
       message.client.voicePlayer.emit(AudioPlayerStatus.Idle);
 
     } else {
+      console.log("Pushing to Queue!")
+      nowPlaying = new EmbedBuilder()
+        .setTitle(searchData.title)
+        .setDescription(`Added to Queue.
+      Length: ${songLength(searchData.durationInSec)}
+      Quality: 96kbps
+      Position: [${songLength((Date.now() - message.client.musicQueue.get(message.guild.id).durationStart) / 1000)}/${songLength(searchData.durationInSec)}]`)
+        .setColor(0xff0000)
+        .setTimestamp()
+        .setImage(queueData.queue[queueData.queuePosition].image)
+        .setFooter({ text: message.author.username })
       queueData.queue.push({
-        name: searchData.description,
+        url: searchData.url,
+        name: searchData.title,
         duration: searchData.durationInSec,
         image: searchData.thumbnails[0].url
       })
       queueData.durationStart = Date.now();
       message.client.musicQueue.set(message.guild.id, queueData);
+      message.channel.send({ embeds: [nowPlaying] });
     }
   },
 };
